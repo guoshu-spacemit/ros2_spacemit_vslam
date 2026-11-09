@@ -2481,9 +2481,10 @@ private:
         message.pose.pose.orientation.y = state.world_from_rig.y();
         message.pose.pose.orientation.z = state.world_from_rig.z();
         message.pose.pose.orientation.w = state.world_from_rig.w();
-        message.twist.twist.linear.x = state.velocity.x();
-        message.twist.twist.linear.y = state.velocity.y();
-        message.twist.twist.linear.z = state.velocity.z();
+        const Eigen::Vector3f velocity_rig = state.world_from_rig.conjugate() * state.velocity;
+        message.twist.twist.linear.x = velocity_rig.x();
+        message.twist.twist.linear.y = velocity_rig.y();
+        message.twist.twist.linear.z = velocity_rig.z();
         imu_pose_pub_->publish(message);
     }
 
