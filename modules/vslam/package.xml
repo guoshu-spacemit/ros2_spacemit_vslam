@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>spacemit_vslam</name>
+  <version>17.0.0</version>
+  <description>SpacemiT CPU and RVV visual odometry and mapping C++ SDK.</description>
+  <maintainer email="robot_team@spacemit.com">robot_team</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>cmake</buildtool_depend>
+  <system_depend realm="target">libeigen3-dev</system_depend>
+  <system_depend realm="target">libyaml-cpp-dev</system_depend>
+  <system_depend realm="target">liblmdb-dev</system_depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>

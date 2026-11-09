@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "package": "spacemit_vslam",
+  "version": "17.0.0",
+  "target": {
+    "system": "Linux",
+    "processor": "riscv64",
+    "elf_class": 64,
+    "endianness": "little",
+    "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+    "abi": "lp64d",
+    "board": "SpacemiT K3 / X100",
+    "distribution": "Bianbu 4.0.1"
+  },
+  "build": {
+    "compiler": "c++ (Bianbu 15.2.0-16ubuntu1bb3) 15.2.0",
+    "cmake": "cmake version 4.2.3",
+    "build_type": "Release",
+    "cxx_standard": 17,
+    "strip": "GNU strip --strip-unneeded"
+  },
+  "features": {
+    "lmdb": true,
+    "rvv_implementation": false,
+    "slam_output": false
+  },
+  "libraries": [
+    "lib/libspacemit_vslam.so"
+  ],
+  "elf": {
+    "lib/libspacemit_vslam.so": {
+      "sha256": "6e7d1876ce63596187016a219b778367165a9cc1935749069f84567e60e16d49",
+      "bytes": 2557104,
+      "dynamic_exports": 243,
+      "exports_sha256": "01a420ea6f53d733fb8d63b075f25c129022c410f3e254444d8e86a6a92f768d",
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_vslam.so"
+      ],
+      "search_paths": [],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.11",
+        "CXXABI_1.3.13",
+        "CXXABI_1.3.15",
+        "CXXABI_1.3.2",
+        "CXXABI_1.3.3",
+        "CXXABI_1.3.5",
+        "CXXABI_1.3.7",
+        "CXXABI_1.3.8",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GCC_4.5.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.11",
+        "GLIBCXX_3.4.14",
+        "GLIBCXX_3.4.15",
+        "GLIBCXX_3.4.18",
+        "GLIBCXX_3.4.19",
+        "GLIBCXX_3.4.20",
+        "GLIBCXX_3.4.21",
+        "GLIBCXX_3.4.22",
+        "GLIBCXX_3.4.26",
+        "GLIBCXX_3.4.29",
+        "GLIBCXX_3.4.30",
+        "GLIBCXX_3.4.32",
+        "GLIBCXX_3.4.9",
+        "GLIBC_2.27",
+        "GLIBC_2.32",
+        "GLIBC_2.33",
+        "GLIBC_2.34",
+        "GLIBC_2.38"
+      ],
+      "stripped": true
+    }
+  },
+  "files": {
+    "include/spacemit_vslam/api.h": "9010adda44d549ea83f80d71098b80f77e9ae58cb256e4b10b30bf02e8a34a24",
+    "include/spacemit_vslam/diagnostics/frame_diagnostics.h": "430ef78be8ce45a502f1c774ffe7278d983720c8bdefda08f03fd9594ac89106",
+    "include/spacemit_vslam/diagnostics/frame_parameters.h": "35410b618437e7d6f58e30ab10dd4814bb720055f28270c0f4833c494046950d",
+    "include/spacemit_vslam/diagnostics/pnp.h": "70e00240ed1909167c7d62c5ce924edd20fb7bd3d2783e9bf7d7d7f6a33db0a4",
+    "lib/cmake/spacemit_vslam/spacemit_vslamConfig.cmake": "a8a348521e7a006d7bcba03cd88ce3fb26ebdf6fff657f7cc340ed8e121adfa0",
+    "lib/cmake/spacemit_vslam/spacemit_vslamConfigVersion.cmake": "34ca8b11a24fe84b4e184a3df24b4824371dc74a5d542b7484e3972176cdb86b",
+    "lib/cmake/spacemit_vslam/spacemit_vslamTargets-release.cmake": "c7f0f5212f2346e2fb6b300f7e56f167302185f201cdbc4481a0d57f5c6850b9",
+    "lib/cmake/spacemit_vslam/spacemit_vslamTargets.cmake": "512bb762c5fe5c9b8a049def0caebeb17a8c47bd95ee96f981cb4d977a11bb27",
+    "lib/libspacemit_vslam.so": "6e7d1876ce63596187016a219b778367165a9cc1935749069f84567e60e16d49",
+    "share/licenses/spacemit_vslam/LICENSE": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+    "share/licenses/spacemit_vslam/third-party/LICENSE_INPUTS.json": "efa0c79b3f7f7db6c70fa4d7d7c37747023ab5d3dc4c0c2d5e92853e43d6d6b2",
+    "share/licenses/spacemit_vslam/third-party/cnpy/LICENSE": "1ff6fa94ad29d941ceb3bdd5ebfb260ddba4c3e962c50fb7a66c899e769de1ff",
+    "share/licenses/spacemit_vslam/third-party/dense_hash_map/LICENSE": "18f9dca20fdaf53f0b4a9ca8ce725510fac59aeb3ee9965cc24b1a10b3bdb66f",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.APACHE": "03379001a7b12a2ec997a25554247d985270b353c10d5bafee9ac8d6519820b7",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.BSD": "51928dce36213c5333ba3172e847d735d4c6e9b7ff2722a326c49067155b82eb",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.GPL": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.LGPL": "dc626520dcd53a22f727af3ee42c770e56c97a64fe3adb063799d8ab032fe551",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.MINPACK": "c87b7f8ee88f6195e91743820c00354833583aef091b72e2d4a49c8e28e798a0",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.MPL2": "fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85",
+    "share/licenses/spacemit_vslam/third-party/eigen/COPYING.README": "c83230b770f17ef1386ea1fd3681271dd98aa93646bdbfb5bff3a1b7050fff9d",
+    "share/licenses/spacemit_vslam/third-party/gflags/COPYING.txt": "90d1f3701813c3cd65eee2dc736746fe46b465918f3f7d6d31463a2018b33fa5",
+    "share/licenses/spacemit_vslam/third-party/googletest/LICENSE": "9702de7e4117a8e2b20dafab11ffda58c198aede066406496bef670d40a22138",
+    "share/licenses/spacemit_vslam/third-party/jsoncpp/LICENSE": "cec0db5f6d7ed6b3a72647bd50aed02e13c3377fd44382b96dc2915534c042ad",
+    "share/licenses/spacemit_vslam/third-party/libjpeg/LICENSE": "2189dc45a8fe96204069f8124caa53a148dfdc193f50f584c6ca7849a6072872",
+    "share/licenses/spacemit_vslam/third-party/libjpeg/README.ijg": "75815e3bf6484201a3c3d17a1bbf10f2e8e3237f84df10a2357ea896db2a81d6",
+    "share/licenses/spacemit_vslam/third-party/libpng/LICENSE": "bdb0a645ea18c60507d0368379b1ac5474b92255fcc2d115e07486a7672ba526",
+    "share/licenses/spacemit_vslam/third-party/lmdb/libraries/liblmdb/COPYRIGHT": "3c87f63656b6a12fda225b6f798c547fe89e3404f499e890b445761eb310fd4f",
+    "share/licenses/spacemit_vslam/third-party/lmdb/libraries/liblmdb/LICENSE": "310fe25c858a9515fc8c8d7d1f24a67c9496f84a91e0a0e41ea9975b1371e569",
+    "share/licenses/spacemit_vslam/third-party/spdlog/LICENSE": "d678c20826e1392578508e1c78649a1e3c31bda05ef4388d967dbd654461b140",
+    "share/licenses/spacemit_vslam/third-party/spdlog/fmt-license-from-header.txt": "08116393a4102b4275f3b072514899c1078424526328530f0363b49afc1cd1d5",
+    "share/licenses/spacemit_vslam/third-party/yaml-cpp/LICENSE": "aa6fcc27be034e41e21dd832f9175bfe694a48491d9e14ff0fa278e19ad14f1b",
+    "share/licenses/spacemit_vslam/third-party/zlib/LICENSE": "845efc77857d485d91fb3e0b884aaa929368c717ae8186b66fe1ed2495753243"
+  }
+}

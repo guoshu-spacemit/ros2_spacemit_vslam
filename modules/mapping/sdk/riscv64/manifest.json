@@ -1,0 +1,349 @@
+{
+  "schema_version": 1,
+  "package": "spacemit_mapping",
+  "version": "0.1.0",
+  "target": {
+    "system": "Linux",
+    "processor": "riscv64",
+    "elf_class": 64,
+    "endianness": "little",
+    "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+    "abi": "lp64d",
+    "board": "SpacemiT K3 / X100",
+    "distribution": "Bianbu 4.0.1"
+  },
+  "build": {
+    "compiler": "c++ (Bianbu 15.2.0-16ubuntu1bb3) 15.2.0",
+    "cmake": "cmake version 4.2.3",
+    "build_type": "Release",
+    "cxx_standard": 17,
+    "strip": "GNU strip --strip-unneeded"
+  },
+  "features": {
+    "rendering": true,
+    "map_io": false,
+    "map_sqlite": false
+  },
+  "libraries": [
+    "lib/libspacemit_mapping_core.so",
+    "lib/libspacemit_mapping_distance_field.so",
+    "lib/libspacemit_mapping_fusion.so",
+    "lib/libspacemit_mapping_geometry.so",
+    "lib/libspacemit_mapping_map_storage.so",
+    "lib/libspacemit_mapping_mapping.so",
+    "lib/libspacemit_mapping_rendering.so",
+    "lib/libspacemit_mapping_surface.so"
+  ],
+  "elf": {
+    "lib/libspacemit_mapping_core.so": {
+      "sha256": "aa4f9561605122f132e5d69613475bec8382875158cc8c6c0614a4f40994b846",
+      "bytes": 6536,
+      "dynamic_exports": 4,
+      "exports_sha256": "fdc4d4e5d9eb8293a859de2f28cd01238440149fa9b3ba1c1394314223d6767e",
+      "needed": [
+        "libstdc++.so.6",
+        "libgcc_s.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_core.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.21"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_distance_field.so": {
+      "sha256": "fa1b4e0b3da32e191f07c020937ef5acc8b5c0509e5ff314a9494c4903065254",
+      "bytes": 60232,
+      "dynamic_exports": 46,
+      "exports_sha256": "2ed2880dcf20ede48189c50a111f6dc436983ccb755793f2303586c3677b677a",
+      "needed": [
+        "libspacemit_mapping_geometry.so",
+        "libspacemit_mapping_map_storage.so",
+        "libspacemit_mapping_core.so",
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_distance_field.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.11",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.18",
+        "GLIBCXX_3.4.21",
+        "GLIBCXX_3.4.29",
+        "GLIBC_2.27"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_fusion.so": {
+      "sha256": "0e5862390cdbd36feeab49b1603b5994e3dbf03c5ffb54082ffbdfa2ecdbf812",
+      "bytes": 72608,
+      "dynamic_exports": 76,
+      "exports_sha256": "e2821bcb6c77328db19df08f1f30ac72fd475fc8a809f4e365e0fee9e3706bd9",
+      "needed": [
+        "libspacemit_mapping_geometry.so",
+        "libspacemit_mapping_map_storage.so",
+        "libspacemit_mapping_core.so",
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_fusion.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.11",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.18",
+        "GLIBCXX_3.4.21",
+        "GLIBCXX_3.4.29",
+        "GLIBC_2.27"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_geometry.so": {
+      "sha256": "99424b3df3e21a20737865d6c2836314a1a65c21b65c3a59d4443384842a0673",
+      "bytes": 31504,
+      "dynamic_exports": 65,
+      "exports_sha256": "0bbcfc46474d7702d83a40e5b5480ce540ea809ee85c278715c40c73fea3db29",
+      "needed": [
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_geometry.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.20",
+        "GLIBCXX_3.4.21",
+        "GLIBC_2.27"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_map_storage.so": {
+      "sha256": "2179fed1b9eb33b4105f64670d8a7ac2cd9642b3badf5d03a1bd262e710896b5",
+      "bytes": 31400,
+      "dynamic_exports": 47,
+      "exports_sha256": "794f70b5969d2415588665e3199a0242dd375e87728f84364d91a7e68bf20ddc",
+      "needed": [
+        "libspacemit_mapping_core.so",
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_map_storage.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.11",
+        "GLIBCXX_3.4.18",
+        "GLIBCXX_3.4.21",
+        "GLIBCXX_3.4.29",
+        "GLIBC_2.27",
+        "GLIBC_2.32"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_mapping.so": {
+      "sha256": "3ebb022a3da0ddef2b204779bd3ab902f7341ceda3792a5ca3eeb0fffe279319",
+      "bytes": 183800,
+      "dynamic_exports": 211,
+      "exports_sha256": "19ee5cee81c1cdbed4786fdc2a25a65b5f0c6dd265d5ba60409c45f2a24384cb",
+      "needed": [
+        "libspacemit_mapping_fusion.so",
+        "libspacemit_mapping_distance_field.so",
+        "libspacemit_mapping_surface.so",
+        "libspacemit_mapping_geometry.so",
+        "libspacemit_mapping_map_storage.so",
+        "libspacemit_mapping_core.so",
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_mapping.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.11",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.18",
+        "GLIBCXX_3.4.21",
+        "GLIBCXX_3.4.29",
+        "GLIBC_2.27",
+        "GLIBC_2.32"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_rendering.so": {
+      "sha256": "854b2ea64527709da6e4861e7b33666f123a4b69a5fd1d7ad87aa27132a540db",
+      "bytes": 106264,
+      "dynamic_exports": 62,
+      "exports_sha256": "9a1edca99f2db9edaf9dc885c2a106a500d36174bcb668a007f1da52d3b1215b",
+      "needed": [
+        "libspacemit_mapping_surface.so",
+        "libspacemit_mapping_core.so",
+        "libEGL.so.1",
+        "libGLESv2.so.2",
+        "libgbm.so.1",
+        "libdrm.so.2",
+        "libstdc++.so.6",
+        "libm.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_rendering.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.11",
+        "GLIBCXX_3.4.19",
+        "GLIBCXX_3.4.21",
+        "GLIBC_2.27",
+        "GLIBC_2.34"
+      ],
+      "stripped": true
+    },
+    "lib/libspacemit_mapping_surface.so": {
+      "sha256": "41b9e5ace9bc69fa1c89a868812fd8e122bbb465506155b9c60482685414ed20",
+      "bytes": 43552,
+      "dynamic_exports": 20,
+      "exports_sha256": "3496f939ee74fc8f69b3e4b781205a01927ca3788030cfa65757c50a3584518b",
+      "needed": [
+        "libspacemit_mapping_core.so",
+        "libstdc++.so.6",
+        "libgcc_s.so.1",
+        "libc.so.6",
+        "ld-linux-riscv64-lp64d.so.1"
+      ],
+      "soname": [
+        "libspacemit_mapping_surface.so"
+      ],
+      "search_paths": [
+        "$ORIGIN"
+      ],
+      "isa": "rv64i2p1_m2p0_a2p1_f2p2_d2p2_c2p0_b1p0_v1p0_zic64b1p0_zicbom1p0_zicbop1p0_zicboz1p0_ziccamoa1p0_ziccif1p0_zicclsm1p0_ziccrse1p0_zicntr2p0_zicond1p0_zicsr2p0_zifencei2p0_zihintntl1p0_zihintpause2p0_zihpm2p0_zimop1p0_zmmul1p0_za64rs1p0_zaamo1p0_zalrsc1p0_zawrs1p0_zfa1p0_zfhmin1p0_zca1p0_zcb1p0_zcd1p0_zcmop1p0_zba1p0_zbb1p0_zbs1p0_zkt1p0_zvbb1p0_zve32f1p0_zve32x1p0_zve64d1p0_zve64f1p0_zve64x1p0_zvfhmin1p0_zvkb1p0_zvkt1p0_zvl128b1p0_zvl256b1p0_zvl32b1p0_zvl64b1p0_supm1p0",
+      "symbol_versions": [
+        "CXXABI_1.3",
+        "CXXABI_1.3.9",
+        "GCC_3.0",
+        "GLIBCXX_3.4",
+        "GLIBCXX_3.4.18",
+        "GLIBCXX_3.4.21",
+        "GLIBCXX_3.4.29",
+        "GLIBC_2.27"
+      ],
+      "stripped": true
+    }
+  },
+  "files": {
+    "include/spacemit_mapping/core/image_view.h": "da4ab0222d8ac2a83a007e7ebf883edf79d4bdcecb4257267b5356798a1cb30b",
+    "include/spacemit_mapping/core/types.h": "5330260b5e38143b004ca89296560a124efa62071819c88d0653e9fc204f9c25",
+    "include/spacemit_mapping/distance_field/field.h": "61087dbb9215621df5e28d944e590e1fdd1ddc069de661bfb0ce6d2324f4bc7b",
+    "include/spacemit_mapping/fusion/appearance.h": "3d95a8b38e9854d622542a5c739c75f499771b1af9f5c38a90a7179599ff00dc",
+    "include/spacemit_mapping/fusion/frames.h": "6059a1cf3cb18dc9b9e56eb148f16d56b9fc4bcf478836507da01a523b808907",
+    "include/spacemit_mapping/fusion/kernels.h": "4b44eaf455449b07b1e9a7f4a451bd4e932b0279e3b8e59254b15bf154168009",
+    "include/spacemit_mapping/geometry/bounding_shape.h": "a142a7c80d0e3d09e2d699bf3891457566dfc7f956740cbbfec7bd7adfb1fb98",
+    "include/spacemit_mapping/geometry/camera.h": "fc7db450d3e0c2a72ad59e0fdfb50186ae9c1180b5b7fb6c83180488d7aee04c",
+    "include/spacemit_mapping/geometry/lidar.h": "1e9297157b2ea1f03b5d8909ec016ced68284349af44cb11ca09a3fce5d74bb6",
+    "include/spacemit_mapping/geometry/plane.h": "5d1eace2474a123cba62e83ca4ced383b36bf6779f92ecf118fafcf492d026dc",
+    "include/spacemit_mapping/geometry/pointcloud.h": "037ba748ade6412e4d4f5250c3e48391076a021ad01102666115f14695c3ab12",
+    "include/spacemit_mapping/geometry/rigid_transform.h": "ae1462bc29393784242d0716213be74be769be547a259b9afa6e2e7ec5149857",
+    "include/spacemit_mapping/map_storage/blocks.h": "ddca4e27900b6a90127b6e4ffe83556c7212a7024122a7a4f41587a320bdaae6",
+    "include/spacemit_mapping/map_storage/change_tracker.h": "e5de2eeef286ff44f61c861ab6a6a2908aadcd5627b88bcae45df104a493660c",
+    "include/spacemit_mapping/map_storage/grid.h": "4fd09ba81b53269df9b7a70d194a6e33c35d80fb3ed2076c421c0abd2f283911",
+    "include/spacemit_mapping/map_storage/layer.h": "f3a202d1e589313ef63b403c67884cc6b470583bc6305d5883dc0a963c48d60e",
+    "include/spacemit_mapping/map_storage/layer_registry.h": "3fbc1f93c781a17e41d9fcca7998692261d45dbfd37d67b1f6eabac0c99ba0c6",
+    "include/spacemit_mapping/mapping/decay.h": "8f337e3cdd52dfe49a79d442f68ea812fbe4daf061b7fc0093fca8129aec6850",
+    "include/spacemit_mapping/mapping/dynamics.h": "32e51ef5c018e63eae937f3605fc3802238ffdff7a8af45863fdfbda486deb0b",
+    "include/spacemit_mapping/mapping/freespace.h": "896a988e3ddc138a7867db5236f36b119bedb5b9b273f83e04a33c53a5a48038",
+    "include/spacemit_mapping/mapping/masks.h": "b55f138cd96996a3dd104019c29d8c8208164dceee26871180ebad2e35a869d0",
+    "include/spacemit_mapping/mapping/multi_session.h": "ce9dbd61a7b03ac3c96a0fdf7376a803ac978e6d2a4d81c94f785b55b5a7ed0a",
+    "include/spacemit_mapping/mapping/session.h": "6dc0d7543ae2ac752db8354630527e3e167dfa23b0f70d9ec214a6289b1f4e79",
+    "include/spacemit_mapping/mapping/state.h": "98e6b33affcdada1db6e3a92dc110d421a20b3e8a0d4fa61b904d271b9082bc9",
+    "include/spacemit_mapping/mapping/views.h": "a23acaca1b6d1a4c703b5dee8736d16207e5ee420f5a6b684675acef0b2ad8a9",
+    "include/spacemit_mapping/rendering/renderer.h": "6551026e68832421ddaf67a4452c4933e7e06c621caf69cdfbc775da695d74bd",
+    "include/spacemit_mapping/rendering/scene.h": "45f6aa67574c4a7441ceeff7305264c730f5e2f6149625805e8e92706d82a00a",
+    "include/spacemit_mapping/surface/mesh.h": "f5192d713c26ccdf9ce489704aa870a061d8067b27a8c870af90b952e696ba0b",
+    "include/spacemit_mapping/surface/points.h": "e0c0f6eef89ccac1f45aac037d5c8810b84e7ba7cf0f474537f03050da1dab5f",
+    "include/spacemit_mapping/surface/topology.h": "4c495451e0b153e9b96b78bc92e02c7235aba21956b899880c948cb17bdea9ce",
+    "lib/cmake/spacemit_mapping/spacemit_mappingConfig.cmake": "f4a06d53e4ae4468c60e2011dc839b76365c375c10034ad7ca63d1abec61a4ce",
+    "lib/cmake/spacemit_mapping/spacemit_mappingConfigVersion.cmake": "4440cdfab7c7e4e4fffcf0d81d698fcd80290c4f2a8d32c4f8242993b0af951d",
+    "lib/cmake/spacemit_mapping/spacemit_mappingTargets-release.cmake": "5c608090b25d027d0ec3a1b469036c2539f4c4a0aae0fa798a334fcaf256cd09",
+    "lib/cmake/spacemit_mapping/spacemit_mappingTargets.cmake": "9c1022c913080726308c9418cd7016c9c4432cdc1023ca2bdeb0bc3621e6c7a3",
+    "lib/libspacemit_mapping_core.so": "aa4f9561605122f132e5d69613475bec8382875158cc8c6c0614a4f40994b846",
+    "lib/libspacemit_mapping_distance_field.so": "fa1b4e0b3da32e191f07c020937ef5acc8b5c0509e5ff314a9494c4903065254",
+    "lib/libspacemit_mapping_fusion.so": "0e5862390cdbd36feeab49b1603b5994e3dbf03c5ffb54082ffbdfa2ecdbf812",
+    "lib/libspacemit_mapping_geometry.so": "99424b3df3e21a20737865d6c2836314a1a65c21b65c3a59d4443384842a0673",
+    "lib/libspacemit_mapping_map_storage.so": "2179fed1b9eb33b4105f64670d8a7ac2cd9642b3badf5d03a1bd262e710896b5",
+    "lib/libspacemit_mapping_mapping.so": "3ebb022a3da0ddef2b204779bd3ab902f7341ceda3792a5ca3eeb0fffe279319",
+    "lib/libspacemit_mapping_rendering.so": "854b2ea64527709da6e4861e7b33666f123a4b69a5fd1d7ad87aa27132a540db",
+    "lib/libspacemit_mapping_surface.so": "41b9e5ace9bc69fa1c89a868812fd8e122bbb465506155b9c60482685414ed20",
+    "share/licenses/spacemit_mapping/LICENSE": "c74536c5ff6e44ce3ec483929a6b534aae433ec7556f833fa62cb97db589f664",
+    "share/licenses/spacemit_mapping/LICENSE.cube_cases": "7adfb16c219ded2c8d54ba463e563a1a0fce731244347b6ddf1b6d96dbbc57cb"
+  }
+}

@@ -1,0 +1,3 @@
+# Preserve exact upstream license bytes while checking project whitespace normally.
+modules/vslam/sdk/riscv64/share/licenses/spacemit_vslam/third-party/eigen/COPYING.MPL2 whitespace=-blank-at-eol
+modules/vslam/sdk/riscv64/share/licenses/spacemit_vslam/third-party/spdlog/fmt-license-from-header.txt whitespace=-blank-at-eof

@@ -1,0 +1,66 @@
+{
+  "schema": "spacemit_vslam.dependencies.v1",
+  "project": "spacemit-vslam",
+  "repository": {
+    "path": "middleware/ros2/slam/spacemit-vslam",
+    "remote": "https://github.com/spacemit-robotics/ros2_spacemit_vslam.git"
+  },
+  "dependencies": {
+    "imu_dds": {
+      "path": "middleware/ros2/peripherals/imu",
+      "package": "peripherals_imu_node",
+      "kind": "external_sdk",
+      "consumer_target": "camera_io::imu_dds",
+      "consumer_adapter": "src/camera_io/cmake/imu_dds_compatibility.cmake"
+    },
+    "mpp": {
+      "path": "components/multimedia/mpp",
+      "kind": "external_sdk"
+    },
+    "mpp_msgs": {
+      "path": "components/multimedia/mpp/test/ros2_mpp_msgs",
+      "package": "mpp_msgs",
+      "kind": "external_sdk"
+    },
+    "las2": {
+      "path": "components/perception/stereo_matching",
+      "package": "stereo_matching",
+      "required_component": "external_input",
+      "kind": "external_sdk",
+      "runtime_contract": "components/perception/stereo_matching/RUNTIME_CONTRACT.json"
+    },
+    "spacemit_camera": {
+      "path": "middleware/ros2/slam/spacemit-vslam/modules/camera",
+      "package": "spacemit_camera",
+      "kind": "in_tree_native"
+    },
+    "spacemit_vslam": {
+      "path": "middleware/ros2/slam/spacemit-vslam/modules/vslam",
+      "package": "spacemit_vslam",
+      "kind": "in_tree_binary_sdk",
+      "binary_manifest": "middleware/ros2/slam/spacemit-vslam/modules/vslam/sdk/riscv64/manifest.json"
+    },
+    "spacemit_mapping": {
+      "path": "middleware/ros2/slam/spacemit-vslam/modules/mapping",
+      "package": "spacemit_mapping",
+      "kind": "in_tree_binary_sdk",
+      "binary_manifest": "middleware/ros2/slam/spacemit-vslam/modules/mapping/sdk/riscv64/manifest.json"
+    }
+  },
+  "role": "RISC-V VSLAM and mapping SDKs with camera and ROS 2 integration",
+  "system_runtime": {
+    "k3_gpu": {
+      "arch": "riscv64",
+      "packages": [
+        "img-gpu-powervr",
+        "libegl-pvr0",
+        "libgbm1-pvr",
+        "libgl1-pvr-dri",
+        "libglapi-pvr",
+        "pvr-vulkan-drivers"
+      ],
+      "declaration": "src/esdf_drm/package.xml",
+      "policy": "Use the board image matched PowerVR packages; re-login after first driver installation; runtime checks actual renderer"
+    }
+  }
+}
