@@ -9,6 +9,7 @@ import sys
 import tempfile
 import textwrap
 import unittest
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 SOURCE = Path(__file__).resolve().parents[1]
@@ -28,18 +29,13 @@ class OriginalSdkBuildTest(unittest.TestCase):
         )
         self.project = self.sdk / "middleware/ros2/slam/spacemit-vslam"
         (self.project / "tools").mkdir(parents=True)
-        (self.project / "dependencies").mkdir()
         for name in ("build.py",):
             shutil.copy2(SOURCE / "tools" / name, self.project / "tools" / name)
         shutil.copy2(SOURCE / "build.sh", self.project / "build.sh")
-        shutil.copy2(
-            SOURCE / "dependencies/dependencies.json",
-            self.project / "dependencies/dependencies.json",
-        )
-        manifest = json.loads((SOURCE / "dependencies/dependencies.json").read_text())
-        for dep in manifest["dependencies"].values():
-            (self.sdk / dep["path"]).mkdir(parents=True, exist_ok=True)
-        (self.sdk / "components/peripherals/imu").mkdir(parents=True)
+        shutil.copy2(SOURCE / "package.xml", self.project / "package.xml")
+        manifest = ET.parse(SOURCE / "package.xml").getroot()
+        for dependency in manifest.findall("depend"):
+            (self.sdk / dependency.text.strip()).mkdir(parents=True, exist_ok=True)
         package_groups = (
             ("modules", ("camera", "mapping", "vslam")),
             ("src", ("common", "camera_io", "vio", "las2", "esdf_drm", "bringup")),
@@ -161,6 +157,18 @@ class OriginalSdkBuildTest(unittest.TestCase):
         self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
         self.assertEqual(len(self.commands()), 4)
         self.assertTrue(all(item["tool"] == "cmake" for item in self.commands()))
+
+    def test_layout_check_reads_sdk_dependencies_from_package_xml(self):
+        result = self.invoke("--check")
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        checks = json.loads(result.stdout)["dependencies"]
+        dependency = "components/perception/stereo_matching"
+        self.assertTrue(checks[dependency]["present"])
+        shutil.rmtree(self.sdk / dependency)
+        result = self.invoke("--check")
+        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+        self.assertFalse(json.loads(result.stdout)["dependencies"][dependency]["present"])
+        self.assertFalse(self.record.exists())
 
     def test_unvalidated_cross_build_is_explicitly_rejected(self):
         result = self.invoke("--cross")

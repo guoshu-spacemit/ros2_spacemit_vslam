@@ -94,7 +94,7 @@ public:
     Camera& operator=(const Camera&) = delete;
 
     Frame get_frame(int timeout_ms = 1000);
-    const CameraConfig& config() const noexcept;
+    const CameraConfig& config() const;
 
 private:
     std::shared_ptr<detail::CameraState> state_;

@@ -25,7 +25,7 @@ find_package(visualization_msgs REQUIRED)
 find_package(yaml-cpp REQUIRED)
 find_package(Eigen3 REQUIRED)
 
-include("${CMAKE_CURRENT_LIST_DIR}/../../dependencies/sdk_dependencies.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../../cmake/RobotSDK.cmake")
 spacemit_find_mpp()
 find_package(spacemit_camera CONFIG REQUIRED)
 find_package(spacemit_vslam CONFIG REQUIRED)

@@ -3,7 +3,7 @@
 from pathlib import Path
 import re
 
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_prefix, get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, OpaqueFunction, SetLaunchConfiguration
 from launch.conditions import IfCondition, UnlessCondition
@@ -47,6 +47,10 @@ def configure_execution(context):
 
 
 def generate_launch_description():
+    runtime = Path(get_package_prefix("las2")) / "lib" / "libstereo_matching_runtime.so"
+    default_las2_preload = (
+        str(runtime) if runtime.is_file() else "libonnxruntime.so.1:libspacemit_ep.so.2"
+    )
     camera_config = str(Path(get_package_share_directory("camera_io")) / "config" / "usb_stereo_4000x1200.json")
     calibration = str(
         Path(get_package_share_directory("camera_io"))
@@ -104,7 +108,7 @@ def generate_launch_description():
         DeclareLaunchArgument("camera_ld_preload", default_value="libmpp.so"),
         DeclareLaunchArgument(
             "las2_ld_preload",
-            default_value="libonnxruntime.so.1:libspacemit_ep.so.2",
+            default_value=default_las2_preload,
         ),
         DeclareLaunchArgument("calibration_file", default_value=calibration),
         DeclareLaunchArgument("imu_calibration_file", default_value=calibration_file),

@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from ament_index_python.packages import get_package_share_directory
+from ament_index_python.packages import get_package_prefix, get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
@@ -10,6 +10,10 @@ from launch_ros.actions import Node
 
 
 def generate_launch_description():
+    runtime = Path(get_package_prefix("las2")) / "lib" / "libstereo_matching_runtime.so"
+    default_las2_preload = (
+        str(runtime) if runtime.is_file() else "libonnxruntime.so.1:libspacemit_ep.so.2"
+    )
     camera_share = Path(get_package_share_directory("camera_io"))
 
     arguments = [
@@ -21,7 +25,7 @@ def generate_launch_description():
         DeclareLaunchArgument("camera_ld_preload", default_value="libmpp.so"),
         DeclareLaunchArgument(
             "las2_ld_preload",
-            default_value="libonnxruntime.so.1:libspacemit_ep.so.2",
+            default_value=default_las2_preload,
         ),
         DeclareLaunchArgument(
             "calibration_file",

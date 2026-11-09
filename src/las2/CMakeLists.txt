@@ -20,7 +20,7 @@ find_package(common REQUIRED)
 find_package(OpenCV REQUIRED COMPONENTS core imgproc imgcodecs)
 find_package(OpenCL REQUIRED)
 
-include("${CMAKE_CURRENT_LIST_DIR}/../../dependencies/sdk_dependencies.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../../cmake/RobotSDK.cmake")
 spacemit_find_mpp()
 find_package(stereo_matching CONFIG REQUIRED COMPONENTS external_input)
 get_target_property(LAS2_INCLUDE_DIR stereo_matching::external_input INTERFACE_INCLUDE_DIRECTORIES)

@@ -79,8 +79,7 @@ fi
 
 viewer_enabled=true
 [[ $mode != backend ]] || viewer_enabled=false
-las2_preload="$LAS2_ORT_LIBRARY_DIR/libonnxruntime.so.1"
-las2_preload+=":$LAS2_ORT_LIBRARY_DIR/libspacemit_ep.so.2"
+las2_preload=$(spacemit_robot_las2_preload "$LAS2_ORT_LIBRARY_DIR")
 exec ros2 launch bringup vio_las2_esdf_launch.py \
     model_path:="$LAS2_MODEL_PATH" \
     camera_ld_preload:="$MPP_LIBRARY_DIR/libmpp.so.1" \

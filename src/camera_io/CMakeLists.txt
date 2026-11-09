@@ -17,7 +17,7 @@ find_package(nav_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
 find_package(mpp_msgs REQUIRED)
 find_package(common REQUIRED)
-include("${CMAKE_CURRENT_LIST_DIR}/../../dependencies/sdk_dependencies.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../../cmake/RobotSDK.cmake")
 include(cmake/imu_dds_compatibility.cmake)
 spacemit_find_mpp()
 

@@ -21,9 +21,9 @@ middleware/ros2/slam/spacemit-vslam/
 │   ├── esdf_drm/        # 异步建图、桌面显示与录屏
 │   ├── common/          # 消息与就绪工具
 │   └── bringup/         # 启动、配置及会话控制
-├── dependencies/       # SDK 依赖路径和查找配置
+├── cmake/              # SDK 头文件与库的查找配置
 ├── tools/              # 构建、二进制校验和构建工具测试
-├── LICENSES/           # 第三方许可补充材料
+├── package.xml         # 项目级 SDK 依赖声明
 ├── LICENSE
 └── README.md
 ```
@@ -48,13 +48,13 @@ camera_mpp_publisher ──双目图像/IMU──► vio_node ──位姿──
 - K3 / X100，Linux `riscv64`，配套 Bianbu 4.0.1 和 ROS 2 Humble 环境。
 - C++17、CMake 3.22 或以上，以及 SDK 配套编译工具和各包声明的依赖。
 - 相机、MPP/V2D、DMA-BUF、PowerVR EGL/GLES/OpenCL 及桌面显示所需驱动和权限。
-- 与 LAS2 ExternalStereo 匹配的 ONNX Runtime、SpacemiT EP 和 FP16 模型工件。
+- LAS2 配套推理运行库由 SDK 的 `stereo_matching` 提供；FP16 模型需单独下载。
 
 按 Robot SDK 的安装流程准备系统环境。GPU 用户态库须与板端镜像配套；应用启动
 日志中的 renderer 应为 PowerVR。首次安装图形驱动后需要重新登录桌面，日常运行
 直接在桌面终端启动。
 
-项目复用 SDK 已有内容，`dependencies/` 不包含依赖源码：
+项目复用 SDK 已有内容，SDK 依赖由根目录 `package.xml` 声明，ROS 包依赖由各包的 `package.xml` 声明：
 
 | 依赖 | SDK 路径 |
 | --- | --- |
@@ -69,22 +69,24 @@ VSLAM 的 LMDB 开启；Mapping 包含 rendering，map_io/SQLite 关闭。
 
 ## 使用 SDK 构建
 
-在 K3 上执行，将工件目录替换为实际路径：
+在 K3 上使用 SDK 的默认配套运行库构建：
 
 ```bash
 cd /path/to/spacemit_robot
 source build/envsetup.sh
-export ARTIFACT_ROOT=/path/to/matched-artifacts
 cd middleware/ros2/slam/spacemit-vslam
 python3 tools/build.py --check
-AUTO_INSTALL_DEPS=no mm -j4 -- \
-  -DONNXRUNTIME_ROOT="$ARTIFACT_ROOT/onnxruntime" \
-  -DSTEREO_MATCHING_EXTERNAL_INPUT_MODEL="$ARTIFACT_ROOT/model/LAS2_M_288x384.fp16.onnx"
+AUTO_INSTALL_DEPS=no mm -j4
 ```
 
 `mm` 经 SDK 的项目入口调用本项目 `build.sh`，编排原生依赖和 ROS 包。
 VSLAM/Mapping 在此步骤校验、安装预编译库；相机、LAS2 和 ROS 封装正常编译。
 默认安装前缀为 SDK 的 `output/staging`，无需创建产品 target。
+
+仅编译不需要模型。运行前按 SDK 的 `stereo_matching/README.md` 下载匹配模型；
+如需在构建时将模型安装到 SDK 前缀，可在 `mm -j4 --` 后追加
+`-DSTEREO_MATCHING_EXTERNAL_INPUT_MODEL=/path/to/LAS2_M_288x384.fp16.onnx`。
+默认无需设置 `ONNXRUNTIME_ROOT`；显式传入时会改用指定目录中的外部运行库。
 
 ## 桌面启动与标定
 

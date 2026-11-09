@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 # Shared dependency paths for an SDK checkout or a relocated product release.
 
+# Select the packaged runtime, or the explicitly supplied external ORT/EP pair.
+spacemit_robot_las2_preload() {
+    local directory=${1:?Expected the LAS2 runtime library directory}
+    if [[ -f $directory/libstereo_matching_runtime.so ]]; then
+        printf '%s\n' "$directory/libstereo_matching_runtime.so"
+    else
+        printf '%s:%s\n' "$directory/libonnxruntime.so.1" "$directory/libspacemit_ep.so.2"
+    fi
+}
+
 # Print the source workspace or release root for the supplied script directory.
 spacemit_robot_default_workspace() {
     local scripts=${1:?Expected the bringup script directory}

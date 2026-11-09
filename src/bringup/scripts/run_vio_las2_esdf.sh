@@ -19,6 +19,8 @@ spacemit_vslam_library_dir=${SPACEMIT_VSLAM_LIBRARY_DIR:-${SPACEMIT_ROBOT_SDK_PR
 las2_library_dir=${LAS2_LIBRARY_DIR:-${SPACEMIT_ROBOT_SDK_PREFIX}/lib}
 opencv_library_dir=${LAS2_OPENCV_LIBRARY_DIR:-/usr/lib/$(gcc -dumpmachine)}
 ort_library_dir=${LAS2_ORT_LIBRARY_DIR}
+las2_preload=$(spacemit_robot_las2_preload "$ort_library_dir")
+IFS=: read -r -a las2_runtime_files <<< "$las2_preload"
 model_path=${LAS2_MODEL_PATH:-}
 calibration_file=${SPACEMIT_ROBOT_CALIBRATION_FILE:-${SPACEMIT_ROBOT_SDK_PREFIX}/share/camera_io/config/0.yaml}
 camera_config_file=${SPACEMIT_ROBOT_CAMERA_CONFIG_FILE:-}
@@ -113,8 +115,7 @@ for required in \
     "${mpp_library_dir}/libmpp.so.1" \
     "${las2_library_dir}/libstereo_matching_pipeline.so" \
     "${opencv_library_dir}/libopencv_core.so.413" \
-    "${ort_library_dir}/libonnxruntime.so.1" \
-    "${ort_library_dir}/libspacemit_ep.so.2" \
+    "${las2_runtime_files[@]}" \
     "${model_path}" \
     "${calibration_file}" \
     "${foxglove_runner}"; do
@@ -131,8 +132,8 @@ fi
 stop_stack
 mkdir -p "${run_dir}"
 
-# The EP has RISC-V static TLS. It must be loaded at process start, after the
-# ONNX Runtime it depends on. TCM cleanup must happen before setting preload.
+# Load the selected runtime at process start. TCM cleanup must happen before
+# setting preload for either the packaged runtime or the external ORT/EP pair.
 if command -v spacemit-tcm-smi >/dev/null 2>&1; then
     env -u LD_PRELOAD spacemit-tcm-smi -c
 fi
@@ -149,7 +150,7 @@ source "${workspace_setup}"
 set -u
 
 export LD_LIBRARY_PATH="${SPACEMIT_ROBOT_SDK_PREFIX}/lib:${mpp_library_dir}:${spacemit_vslam_library_dir}:${las2_library_dir}:${opencv_library_dir}:${ort_library_dir}:${LD_LIBRARY_PATH:-}"
-export LD_PRELOAD="${mpp_library_dir}/libmpp.so.1:${ort_library_dir}/libonnxruntime.so.1:${ort_library_dir}/libspacemit_ep.so.2${LD_PRELOAD:+:${LD_PRELOAD}}"
+export LD_PRELOAD="${mpp_library_dir}/libmpp.so.1:${las2_preload}${LD_PRELOAD:+:${LD_PRELOAD}}"
 
 launch_arguments=(
     input_file:="${input_file}"

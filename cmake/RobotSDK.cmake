@@ -1,6 +1,6 @@
 include_guard(GLOBAL)
 
-# Dependency discovery only. Implementations live in modules/ or SDK repositories.
+# Locate SDK build interfaces. Package dependencies are declared in package.xml.
 get_filename_component(_spacemit_sdk_default "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 while(NOT EXISTS "${_spacemit_sdk_default}/build/envsetup.sh")
   get_filename_component(_spacemit_sdk_parent "${_spacemit_sdk_default}" DIRECTORY)

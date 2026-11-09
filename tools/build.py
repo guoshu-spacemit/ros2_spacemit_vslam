@@ -5,6 +5,7 @@ import argparse
 import json
 import os
 import subprocess
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 PACKAGES = ("common", "camera_io", "vio", "las2", "esdf_drm", "bringup")
@@ -21,10 +22,11 @@ def find_sdk(source):
 
 def inspect_layout(source, sdk):
     """Print source/dependency checks and return whether every required path exists."""
-    manifest = json.loads((source / "dependencies/dependencies.json").read_text())
+    manifest = ET.parse(source / "package.xml").getroot()
     checks = {}
-    for name, dependency in manifest["dependencies"].items():
-        path = sdk / dependency["path"]
+    for dependency in manifest.findall("depend"):
+        name = dependency.text.strip()
+        path = sdk / name
         checks[name] = {"path": str(path), "present": path.is_dir()}
     missing_packages = [
         name for name in PACKAGES

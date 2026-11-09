@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>ros2_spacemit_vslam</name>
+  <version>0.1.0</version>
+  <description>Stereo localization and mapping integration for the Robot SDK.</description>
+  <maintainer email="robot_team@spacemit.com">robot_team</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>cmake</buildtool_depend>
+
+  <!-- SDK package keys; the executable build.sh remains the build entry. -->
+  <depend>components/multimedia/mpp</depend>
+  <depend>components/perception/stereo_matching</depend>
+  <depend>components/peripherals/imu</depend>
+  <depend>middleware/ros2/peripherals/imu</depend>
+  <depend>components/multimedia/mpp/test/ros2_mpp_msgs</depend>
+
+  <export>
+    <build_type>cmake</build_type>
+  </export>
+</package>

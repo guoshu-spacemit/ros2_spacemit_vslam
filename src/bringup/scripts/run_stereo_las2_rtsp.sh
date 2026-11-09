@@ -20,6 +20,8 @@ mpp_library_dir=${MPP_LIBRARY_DIR:-${SPACEMIT_ROBOT_SDK_PREFIX}/lib}
 las2_library_dir=${LAS2_LIBRARY_DIR:-${SPACEMIT_ROBOT_SDK_PREFIX}/lib}
 opencv_library_dir=${LAS2_OPENCV_LIBRARY_DIR:-/usr/lib/riscv64-linux-gnu}
 ort_library_dir=${LAS2_ORT_LIBRARY_DIR}
+las2_preload=$(spacemit_robot_las2_preload "$ort_library_dir")
+IFS=: read -r -a las2_runtime_files <<< "$las2_preload"
 model_path=${LAS2_MODEL_PATH}
 calibration_file=${SPACEMIT_ROBOT_CALIBRATION_FILE:-${SPACEMIT_ROBOT_SDK_PREFIX}/share/camera_io/config/0.yaml}
 camera_config_source=${SPACEMIT_ROBOT_CAMERA_CONFIG_FILE:-${SPACEMIT_ROBOT_SDK_PREFIX}/share/camera_io/config/usb_stereo_4000x1200.json}
@@ -98,8 +100,7 @@ for required in \
     "${workspace_setup}" \
     "${mpp_library_dir}/libmpp.so.1" \
     "${las2_library_dir}/libstereo_matching_pipeline.so" \
-    "${ort_library_dir}/libonnxruntime.so.1" \
-    "${ort_library_dir}/libspacemit_ep.so.2" \
+    "${las2_runtime_files[@]}" \
     "${model_path}" \
     "${camera_config_source}" \
     "${calibration_file}"; do
@@ -171,7 +172,7 @@ unset LD_PRELOAD
 setsid ros2 launch bringup stereo_las2_rtsp_launch.py \
     camera_config_file:="${camera_config}" \
     camera_ld_preload:="${mpp_library_dir}/libmpp.so.1" \
-    las2_ld_preload:="${ort_library_dir}/libonnxruntime.so.1:${ort_library_dir}/libspacemit_ep.so.2" \
+    las2_ld_preload:="${las2_preload}" \
     calibration_file:="${calibration_file}" \
     model_path:="${model_path}" \
     las2_instance_count:="${instance_count}" \

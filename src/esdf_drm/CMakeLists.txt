@@ -24,7 +24,7 @@ pkg_check_modules(GLES REQUIRED IMPORTED_TARGET glesv2)
 pkg_check_modules(GBM REQUIRED IMPORTED_TARGET gbm)
 pkg_check_modules(LIBDRM REQUIRED IMPORTED_TARGET libdrm)
 
-include("${CMAKE_CURRENT_LIST_DIR}/../../dependencies/sdk_dependencies.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/../../cmake/RobotSDK.cmake")
 spacemit_find_mpp()
 find_package(spacemit_mapping CONFIG REQUIRED COMPONENTS mapping rendering)
 get_target_property(SPACEMIT_MAPPING_INCLUDE_DIR spacemit_mapping::mapping INTERFACE_INCLUDE_DIRECTORIES)

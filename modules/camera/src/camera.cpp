@@ -3,6 +3,7 @@
 #include "camera_sdk/camera.h"
 #include "imu_boundary_deduplication.h"
 #include "mpp_runtime.h"
+#include "timestamp_unwrap.h"
 
 #include <mutex>
 #include <stdexcept>
@@ -111,18 +112,6 @@ void dma_sync(int fd, std::uint64_t flags)
     {
         throw std::runtime_error("DMA_BUF_IOCTL_SYNC failed");
     }
-}
-
-std::uint64_t unwrap_near(std::uint64_t reference, std::uint32_t raw)
-{
-    constexpr std::uint64_t wrap = std::uint64_t{1} << 32;
-    constexpr std::uint64_t half = wrap >> 1;
-    std::uint64_t value = (reference & ~(wrap - 1)) | raw;
-    if (value > reference + half)
-        value -= wrap;
-    if (value + half < reference)
-        value += wrap;
-    return value;
 }
 
 } // namespace
@@ -370,24 +359,14 @@ Frame Camera::get_frame(int timeout_ms)
 
     std::string decode_error;
     detail::dma_sync(dma_fd, DMA_BUF_SYNC_START | DMA_BUF_SYNC_READ);
-    const bool decoded =
-        decode_embedded_metadata({frame->image.data, frame->image.width, frame->image.height,
-                                        stride, decoded_mjpeg ? 1U : 2U},
-            frame->metadata, &decode_error);
+    const LumaView metadata_image{frame->image.data, frame->image.width, frame->image.height,
+        stride, decoded_mjpeg ? 1U : 2U};
+    const bool decoded = decode_embedded_metadata(metadata_image, frame->metadata, &decode_error);
     detail::dma_sync(dma_fd, DMA_BUF_SYNC_END | DMA_BUF_SYNC_READ);
     if (decoded)
     {
-        const std::uint32_t raw = frame->metadata.exposure_end_raw_us;
-        const std::uint64_t unwrapped =
-            state_->have_timestamp ? detail::unwrap_near(state_->last_frame_timestamp, raw) : raw;
-        frame->metadata.exposure_end_us = unwrapped;
-        frame->metadata.exposure_start_us =
-            detail::unwrap_near(unwrapped, frame->metadata.exposure_start_raw_us);
-        for (std::size_t i = 0; i < frame->metadata.imu_count; ++i)
-        {
-            frame->metadata.imu[i].timestamp_us =
-                detail::unwrap_near(unwrapped, frame->metadata.imu[i].timestamp_raw_us);
-        }
+        const std::uint64_t unwrapped = detail::unwrap_metadata_timestamps(
+            frame->metadata, state_->last_frame_timestamp, state_->have_timestamp);
         detail::remove_repeated_boundary_imu(frame->metadata, state_->imu_boundary_deduplication);
         state_->last_frame_timestamp = unwrapped;
         state_->have_timestamp = true;
@@ -399,6 +378,11 @@ Frame Camera::get_frame(int timeout_ms)
 #endif
 }
 
-const CameraConfig& Camera::config() const noexcept { return state_->config; }
+const CameraConfig& Camera::config() const
+{
+    if (!state_)
+        throw std::logic_error("empty camera");
+    return state_->config;
+}
 
 } // namespace camera_sdk
