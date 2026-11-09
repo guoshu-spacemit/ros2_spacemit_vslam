@@ -24,7 +24,12 @@ def inspect_layout(source, sdk):
     """Print source/dependency checks and return whether every required path exists."""
     manifest = ET.parse(source / "package.xml").getroot()
     checks = {}
-    for dependency in manifest.findall("depend"):
+    dependencies = (
+        manifest.findall("depend")
+        + manifest.findall("build_depend")
+        + manifest.findall("exec_depend")
+    )
+    for dependency in dependencies:
         name = dependency.text.strip()
         path = sdk / name
         checks[name] = {"path": str(path), "present": path.is_dir()}

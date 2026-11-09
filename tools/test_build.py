@@ -34,8 +34,29 @@ class OriginalSdkBuildTest(unittest.TestCase):
         shutil.copy2(SOURCE / "build.sh", self.project / "build.sh")
         shutil.copy2(SOURCE / "package.xml", self.project / "package.xml")
         manifest = ET.parse(SOURCE / "package.xml").getroot()
-        for dependency in manifest.findall("depend"):
-            (self.sdk / dependency.text.strip()).mkdir(parents=True, exist_ok=True)
+        for tag in ("depend", "build_depend", "exec_depend"):
+            for dependency in manifest.findall(tag):
+                (self.sdk / dependency.text.strip()).mkdir(parents=True, exist_ok=True)
+        for key in (
+            "components/multimedia/mpp",
+            "components/perception/stereo_matching",
+            "components/peripherals/imu",
+            "middleware/ros2/peripherals/imu",
+            "components/multimedia/mpp/test/ros2_mpp_msgs",
+        ):
+            path = self.sdk / key
+            name = path.name
+            build_type = "ament_cmake" if key in (
+                "middleware/ros2/peripherals/imu",
+                "components/multimedia/mpp/test/ros2_mpp_msgs",
+            ) else "cmake"
+            (path / "CMakeLists.txt").write_text(
+                f"cmake_minimum_required(VERSION 3.22)\nproject({name})\n"
+            )
+            (path / "package.xml").write_text(
+                f"<package><name>{name}</name>"
+                f"<export><build_type>{build_type}</build_type></export></package>\n"
+            )
         package_groups = (
             ("modules", ("camera", "mapping", "vslam")),
             ("src", ("common", "camera_io", "vio", "las2", "esdf_drm", "bringup")),
@@ -111,6 +132,44 @@ class OriginalSdkBuildTest(unittest.TestCase):
         """Return the fixture's ordered CMake and colcon invocation records."""
         return [json.loads(line) for line in self.record.read_text().splitlines()]
 
+    def dependency_closure(self):
+        """Use the SDK's real non-ROS resolver without bypassing its checks."""
+        return subprocess.run(
+            [
+                "bash", "-c",
+                'set -euo pipefail; source "$1/build/common.sh"; '
+                'source "$1/build/nonros2.sh"; '
+                'resolve_nonros2_dependency_closure "$2" 0',
+                "sdk-dependency-check", str(self.sdk),
+                "middleware/ros2/slam/spacemit-vslam",
+            ],
+            env=dict(self.env, REPO_ROOT=str(self.sdk)),
+            capture_output=True, text=True, timeout=30,
+        )
+
+    def invoke_with_deps(self):
+        """Run the real SDK dependency preflight and custom build dispatcher."""
+        # The fixture supplies no OS packages. Keep SDK scripts unchanged and
+        # remove only copied system-package declarations so nothing is installed.
+        metadata = self.sdk / "build/package.xml"
+        tree = ET.parse(metadata)
+        for parent in tree.iter():
+            for child in list(parent):
+                if child.tag == "system_depend":
+                    parent.remove(child)
+        tree.write(metadata)
+        env = dict(
+            self.env, SROBOTIS_SKIP_DEPS_CHECK="0", AUTO_INSTALL_DEPS="no",
+            OUTPUT_ROOT=str(self.output), ROS_SETUP=str(self.ros),
+        )
+        return subprocess.run(
+            [
+                str(self.sdk / "build/build.sh"), "-j2", "package",
+                "middleware/ros2/slam/spacemit-vslam", "--with-deps",
+            ],
+            cwd=self.sdk, env=env, capture_output=True, text=True, timeout=30,
+        )
+
     def test_original_sdk_dispatch_orders_native_then_exact_ros_sources(self):
         result = self.invoke(
             "--cmake-arg=-DONNXRUNTIME_ROOT=/fixture/runtime",
@@ -162,13 +221,73 @@ class OriginalSdkBuildTest(unittest.TestCase):
         result = self.invoke("--check")
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         checks = json.loads(result.stdout)["dependencies"]
-        dependency = "components/perception/stereo_matching"
-        self.assertTrue(checks[dependency]["present"])
-        shutil.rmtree(self.sdk / dependency)
-        result = self.invoke("--check")
-        self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
-        self.assertFalse(json.loads(result.stdout)["dependencies"][dependency]["present"])
+        for dependency in (
+            "components/perception/stereo_matching",
+            "middleware/ros2/peripherals/imu",
+            "components/multimedia/mpp/test/ros2_mpp_msgs",
+        ):
+            with self.subTest(dependency=dependency):
+                self.assertTrue(checks[dependency]["present"])
+                shutil.rmtree(self.sdk / dependency)
+                result = self.invoke("--check")
+                self.assertEqual(result.returncode, 1, result.stdout + result.stderr)
+                self.assertFalse(json.loads(result.stdout)["dependencies"][dependency]["present"])
+                (self.sdk / dependency).mkdir(parents=True)
         self.assertFalse(self.record.exists())
+
+    def test_sdk_nonros_closure_excludes_ros_build_and_runtime_dependencies(self):
+        result = self.dependency_closure()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertEqual(result.stdout.splitlines(), [
+            "components/multimedia/mpp",
+            "components/perception/stereo_matching",
+            "components/peripherals/imu",
+        ])
+        manifest = self.project / "package.xml"
+        tree = ET.parse(manifest)
+        ET.SubElement(tree.getroot(), "depend").text = "middleware/ros2/peripherals/imu"
+        tree.write(manifest)
+        rejected = self.dependency_closure()
+        self.assertNotEqual(rejected.returncode, 0)
+        self.assertIn("only supports non-ROS2 SDK dependencies", rejected.stderr)
+        self.assertIn("middleware/ros2/peripherals/imu", rejected.stderr)
+        self.assertFalse(self.record.exists())
+
+    def test_sdk_with_deps_prebuilds_native_then_dispatches_project_ros(self):
+        result = self.invoke_with_deps()
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        commands = self.commands()
+        self.assertEqual(len(commands), 28)
+        self.assertEqual(
+            [item["args"][1] for item in commands[:9] if item["args"][0] == "-S"],
+            [str(self.sdk / key) for key in (
+                "components/multimedia/mpp",
+                "components/perception/stereo_matching",
+                "components/peripherals/imu",
+            )],
+        )
+        self.assertEqual(
+            [item["sdk_lock_held"] for item in commands[:9]],
+            [False, False, True] * 3,
+        )
+        self.assertTrue(all(item["sdk_lock_held"] for item in commands[9:]))
+        self.assertEqual([item["tool"] for item in commands].count("colcon"), 1)
+        ros = commands[-1]
+        self.assertEqual(ros["tool"], "colcon")
+        args = ros["args"]
+        start, end = args.index("--base-paths") + 1, args.index("--packages-select")
+        self.assertEqual(args[start:end], [
+            str(self.project / "src"),
+            str(self.sdk / "middleware/ros2/peripherals/imu"),
+            str(self.sdk / "components/multimedia/mpp/test/ros2_mpp_msgs"),
+        ])
+
+    def test_sdk_with_deps_project_failure_stops_before_ros(self):
+        self.env["TEST_FAIL_SOURCE"] = "modules/camera"
+        result = self.invoke_with_deps()
+        self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
+        self.assertEqual(len(self.commands()), 13)
+        self.assertTrue(all(item["tool"] == "cmake" for item in self.commands()))
 
     def test_unvalidated_cross_build_is_explicitly_rejected(self):
         result = self.invoke("--cross")

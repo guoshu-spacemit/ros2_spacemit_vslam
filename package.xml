@@ -11,8 +11,11 @@
   <depend>components/multimedia/mpp</depend>
   <depend>components/perception/stereo_matching</depend>
   <depend>components/peripherals/imu</depend>
-  <depend>middleware/ros2/peripherals/imu</depend>
-  <depend>components/multimedia/mpp/test/ros2_mpp_msgs</depend>
+  <!-- The project's colcon phase builds ROS packages separately from SDK dependencies. -->
+  <build_depend>middleware/ros2/peripherals/imu</build_depend>
+  <build_depend>components/multimedia/mpp/test/ros2_mpp_msgs</build_depend>
+  <exec_depend>middleware/ros2/peripherals/imu</exec_depend>
+  <exec_depend>components/multimedia/mpp/test/ros2_mpp_msgs</exec_depend>
 
   <export>
     <build_type>cmake</build_type>
