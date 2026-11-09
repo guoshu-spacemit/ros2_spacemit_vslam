@@ -22,7 +22,7 @@ if(DEFINED ENV{SROBOTIS_ROOT} AND NOT "$ENV{SROBOTIS_ROOT}" STREQUAL "")
   set(_camera_sdk_root "$ENV{SROBOTIS_ROOT}")
 endif()
 set(MPP_ROOT "${_camera_sdk_root}/components/multimedia/mpp" CACHE PATH "SDK MPP source")
-set(MPP_BUILD_DIR "${_camera_sdk_root}/output/staging" CACHE PATH "Matching MPP prefix")
+set(MPP_BUILD_DIR "${CMAKE_INSTALL_PREFIX}" CACHE PATH "Matching MPP prefix")
 set(MPP_LIBRARY "" CACHE FILEPATH "Matching MPP library")
 
 function(spacemit_camera_public_target target export_name output_name)
@@ -50,8 +50,12 @@ if(CAMERA_SDK_WITH_V4L2)
 endif()
 if(CAMERA_SDK_WITH_MPP)
   if(NOT MPP_LIBRARY)
-    find_library(_camera_mpp_library NAMES mpp PATHS "${MPP_BUILD_DIR}/lib"
-      "${MPP_BUILD_DIR}/lib64" "${MPP_ROOT}/build-k3/lib" NO_DEFAULT_PATH REQUIRED)
+    find_library(_camera_mpp_library NAMES mpp PATHS
+      "${MPP_BUILD_DIR}/${CMAKE_INSTALL_LIBDIR}" "${MPP_BUILD_DIR}/lib"
+      "${MPP_BUILD_DIR}/lib64" "${CMAKE_INSTALL_FULL_LIBDIR}"
+      "${CMAKE_INSTALL_PREFIX}/lib" "${CMAKE_INSTALL_PREFIX}/lib64"
+      "${_camera_sdk_root}/output/staging/lib" "${_camera_sdk_root}/output/staging/lib64"
+      "${MPP_ROOT}/build-k3/lib" NO_DEFAULT_PATH REQUIRED)
     set(MPP_LIBRARY "${_camera_mpp_library}" CACHE FILEPATH "Matching MPP library" FORCE)
   endif()
   target_sources(spacemit_camera_core PRIVATE src/quad_capture_mpp.cpp)

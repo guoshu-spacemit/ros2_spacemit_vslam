@@ -103,6 +103,31 @@ class OriginalSdkBuildTest(unittest.TestCase):
             tool = tools / name
             tool.write_text(recorder)
             tool.chmod(0o755)
+        query = tools / "dpkg-query"
+        query.write_text(f"#!{sys.executable}\n" + textwrap.dedent(r'''
+            import os
+            import sys
+
+            package = sys.argv[-1]
+            with open(os.environ["TEST_SYSTEM_DEP_RECORD"], "a") as handle:
+                handle.write(package + "\n")
+            if package == os.environ.get("TEST_MISSING_SYSTEM_DEP"):
+                sys.exit(1)
+            print("install ok installed")
+        '''))
+        query.chmod(0o755)
+        apt = tools / "apt-get"
+        apt.write_text(f"#!{sys.executable}\n" + textwrap.dedent(r'''
+            import os
+            import sys
+            from pathlib import Path
+
+            Path(os.environ["TEST_APT_RECORD"]).write_text("unexpected apt invocation\n")
+            sys.exit(97)
+        '''))
+        apt.chmod(0o755)
+        self.system_record = self.sdk / "system-dependencies.txt"
+        self.apt_record = self.sdk / "apt-invoked.txt"
         self.env = dict(
             os.environ,
             PATH=str(tools) + os.pathsep + os.environ["PATH"],
@@ -110,10 +135,13 @@ class OriginalSdkBuildTest(unittest.TestCase):
             SROBOTIS_USE_DOCKER_BUILD="0",
             TEST_LOCK=str(self.output / ".install.lock"),
             TEST_RECORD=str(self.record),
+            TEST_SYSTEM_DEP_RECORD=str(self.system_record),
+            TEST_APT_RECORD=str(self.apt_record),
+            APT_GET_BIN=str(apt),
         )
         for name in (
             "BUILD_TARGET", "BUILD_TARGET_FILE", "BUILD_CONFIG_FILE", "PREFIX",
-            "SROBOTIS_CROSS_BUILD", "SROBOTIS_CMAKE_EXTRA_ARGS",
+            "SROBOTIS_CROSS_BUILD", "SROBOTIS_CMAKE_EXTRA_ARGS", "TEST_MISSING_SYSTEM_DEP",
         ):
             self.env.pop(name, None)
 
@@ -149,8 +177,8 @@ class OriginalSdkBuildTest(unittest.TestCase):
 
     def invoke_with_deps(self):
         """Run the real SDK dependency preflight and custom build dispatcher."""
-        # The fixture supplies no OS packages. Keep SDK scripts unchanged and
-        # remove only copied system-package declarations so nothing is installed.
+        # Keep SDK scripts and project requirements unchanged. The controlled
+        # package database covers project dependencies; omit unrelated base tools.
         metadata = self.sdk / "build/package.xml"
         tree = ET.parse(metadata)
         for parent in tree.iter():
@@ -167,7 +195,7 @@ class OriginalSdkBuildTest(unittest.TestCase):
                 str(self.sdk / "build/build.sh"), "-j2", "package",
                 "middleware/ros2/slam/spacemit-vslam", "--with-deps",
             ],
-            cwd=self.sdk, env=env, capture_output=True, text=True, timeout=30,
+            cwd=self.sdk, env=env, input="n\n", capture_output=True, text=True, timeout=30,
         )
 
     def test_original_sdk_dispatch_orders_native_then_exact_ros_sources(self):
@@ -196,6 +224,8 @@ class OriginalSdkBuildTest(unittest.TestCase):
             if item["tool"] == "cmake" and item["args"][0] == "-S":
                 self.assertIn("-DONNXRUNTIME_ROOT=/fixture/runtime", item["args"])
                 self.assertIn(f"-DCMAKE_INSTALL_PREFIX={self.output}/staging", item["args"])
+                self.assertIn(f"-DMPP_BUILD_DIR={self.output}/staging", item["args"])
+                self.assertIn(f"-DSPACEMIT_SDK_PREFIX={self.output}/staging", item["args"])
         ros = commands[-1]
         self.assertEqual(ros["tool"], "colcon")
         args = ros["args"]
@@ -209,6 +239,24 @@ class OriginalSdkBuildTest(unittest.TestCase):
             ],
         )
         self.assertNotIn(str(self.project / "modules"), args)
+        self.assertIn(f"-DMPP_BUILD_DIR={self.output}/staging", args)
+        self.assertIn(f"-DSPACEMIT_SDK_PREFIX={self.output}/staging", args)
+
+    def test_explicit_dependency_prefixes_override_output_defaults(self):
+        result = self.invoke(
+            "--cmake-arg=-DMPP_BUILD_DIR=/selected/mpp",
+            "--cmake-arg=-DSPACEMIT_SDK_PREFIX=/selected/sdk",
+        )
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        for item in self.commands():
+            if item["tool"] == "cmake" and item["args"][0] != "-S":
+                continue
+            for name, selected in (("MPP_BUILD_DIR", "/selected/mpp"),
+                                   ("SPACEMIT_SDK_PREFIX", "/selected/sdk")):
+                values = [arg for arg in item["args"] if arg.startswith(f"-D{name}=")]
+                self.assertEqual(values, [
+                    f"-D{name}={self.output}/staging", f"-D{name}={selected}",
+                ])
 
     def test_native_failure_stops_before_ros(self):
         self.env["TEST_FAIL_SOURCE"] = "modules/camera"
@@ -288,6 +336,22 @@ class OriginalSdkBuildTest(unittest.TestCase):
         self.assertEqual(result.returncode, 17, result.stdout + result.stderr)
         self.assertEqual(len(self.commands()), 13)
         self.assertTrue(all(item["tool"] == "cmake" for item in self.commands()))
+
+    def test_missing_project_system_dependency_stops_before_build_or_install(self):
+        self.env["TEST_MISSING_SYSTEM_DEP"] = "libavformat-dev"
+        result = self.invoke_with_deps()
+        self.assertNotEqual(result.returncode, 0, result.stdout + result.stderr)
+        self.assertIn("Missing required dependencies: libavformat-dev", result.stdout)
+        self.assertIn("System dependency check/installation failed", result.stderr)
+        checked = self.system_record.read_text().splitlines()
+        required = [
+            dependency.text.strip()
+            for dependency in ET.parse(self.project / "package.xml").getroot().findall("system_depend")
+        ]
+        self.assertIn("libavformat-dev", required)
+        self.assertEqual(set(checked), set(required))
+        self.assertFalse(self.record.exists())
+        self.assertFalse(self.apt_record.exists())
 
     def test_unvalidated_cross_build_is_explicitly_rejected(self):
         result = self.invoke("--cross")

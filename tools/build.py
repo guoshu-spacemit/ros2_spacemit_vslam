@@ -85,6 +85,10 @@ def build_project(source, sdk, output, prefix, jobs, ros_setup, cmake_args, env)
         "-DBUILD_TESTS=OFF",
         "-DSTEREO_MATCHING_BUILD_EXTERNAL_INPUT=ON",
     ]
+    sdk_prefix_args = [
+        f"-DMPP_BUILD_DIR={prefix}",
+        f"-DSPACEMIT_SDK_PREFIX={prefix}",
+    ]
     prefix_path = str(prefix)
     if env.get("CMAKE_PREFIX_PATH"):
         prefix_path += ";" + env["CMAKE_PREFIX_PATH"].replace(":", ";")
@@ -96,7 +100,7 @@ def build_project(source, sdk, output, prefix, jobs, ros_setup, cmake_args, env)
                 "cmake", "-S", package, "-B", build,
                 f"-DCMAKE_INSTALL_PREFIX={prefix}",
                 f"-DCMAKE_PREFIX_PATH={prefix_path}",
-                *defaults, *cmake_args,
+                *defaults, *sdk_prefix_args, *cmake_args,
             ],
             sdk,
             env,
@@ -117,7 +121,7 @@ def build_project(source, sdk, output, prefix, jobs, ros_setup, cmake_args, env)
         "--build-base", output / "build/ros2/spacemit-vslam",
         "--parallel-workers", jobs, "--cmake-args",
         f"-DCMAKE_PREFIX_PATH={prefix_path}", "-DCMAKE_BUILD_TYPE=Release",
-        "-DBUILD_TESTING=OFF", f"-DSROBOTIS_ROOT={sdk}", *cmake_args,
+        "-DBUILD_TESTING=OFF", f"-DSROBOTIS_ROOT={sdk}", *sdk_prefix_args, *cmake_args,
     ]
     # Use the requested system ROS environment, not a pre-existing product overlay.
     run_command(
